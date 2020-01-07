@@ -18,7 +18,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Fasilitas Mobil</h3>
                         </div>
-                        
+
                         <div class="box-body">
 
                             <table class="table">
@@ -41,43 +41,57 @@
                                         <th>PLAT</th>
                                         <th>TANGGAL SEWA</th>
                                         <th>TANGGAL AKHIR SEWA</th>
-                                        <th>TANGGAL PENGEMBALIAN</th>
                                         <th>HARGA PERHARI</th>
+                                        <th>SEWA PENGEMUDI</th>
                                         <th>DENDA</th>
                                         <th>TOTAL BAYAR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                <?php 
-                                    $confirm="disabled";
-                                    if ($STATUS_PEMBAYARAN) {
-                                        $confirm="";
-                                    }
+                                <?php
+                                    // $confirm="disabled";
+                                    // if ($STATUS_PEMBAYARAN) {
+                                    //     $confirm="";
+                                    // }
                                     $start=0;
                                     foreach ($DETAIL_TRANSAKSI as $transaksi)
                                     {
                                 ?>
-                                        
-                                        <tr>
-                                            <td><?php echo ++$start ?></td>
-                                            <td><?php echo $transaksi->NAMA_MOBIL ?></td>
-                                            <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
-                                            <td><?php echo $transaksi->TGL_SEWA ?></td>
-                                            <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
-                                            <td><?php echo $transaksi->TGL_PENGEMBALIAN ?></td>
-                                            <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
-                                            <td>Rp. <?php echo number_format($transaksi->DENDA) ?></td>
-                                            <td>Rp. <?php echo number_format($transaksi->TOTAL) ?></td>
-                                        </tr>
+
+                                    <tr>
+                                        <td><?php echo ++$start ?></td>
+                                        <td><?php echo $transaksi->NAMA_MOBIL ?></td>
+                                        <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
+                                        <td><?php echo $transaksi->TGL_SEWA ?></td>
+                                        <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
+                                        <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
+                                        <?php
+                                          $this->main->setTable("tb_settings");
+                                          $lama = lama(date("Y-m-d H:i:s"),$transaksi->TGL_SEWA,$transaksi->TGL_AKHIR_PENYEWAAN);
+                                          $dendaReal = 0;
+                                          $denda = $this->main->get(["meta_key"=>"denda"])->row()->meta_value;
+                                          $driver = 0;
+                                          if ($transaksi->PENGEMUDI == "pakai") {
+                                            $driver = $this->main->get(["meta_key"=>"harga_driver"])->row()->meta_value;
+                                          }
+                                          if ($lama["sisa"] < 0) {
+                                            $total = ($transaksi->TOTAL+$driver);
+                                            $dendaReal = (abs($lama["sisa"])*($total*($denda/100)))+$total;
+                                          }
+                                         ?>
+                                         <td>Rp. <?= number_format($driver) ?></td>
+                                         <td>Rp. <?= number_format($transaksi->DENDA) ?></td>
+                                        <td>Rp. <?php echo number_format($transaksi->TOTAL) ?></td>
+                                    </tr>
                                         <?php
                                     }
                                     ?>
                                     </tbody>
                                 </table>
-                                                    
- 
-                        </div>                        
+
+
+                        </div>
                     </div>
                 </div><!--/.col (right) -->
             </div>
@@ -96,5 +110,3 @@
                 });
             });
         </script>
-
-

@@ -21,7 +21,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Mobil</h3>
                         </div><!-- /.box-header -->
-                        
+
                         <!-- form start -->
                         <div class="box-body">
                             <div class="row">
@@ -32,8 +32,8 @@
                                 </div>
                                 <div class="col-md-12 text-right">
                                         <?php echo anchor(site_url('mobil/create'), '+ Tambah Mobil', 'class="btn btn-primary"'); ?>
- 
-                                </div>                  
+
+                                </div>
                             </div>
 
                             <br><br>
@@ -53,6 +53,7 @@
                                 <!-- <th>IMAGE</th> -->
                                 <th>STATUS SEWA</th>
                                 <th>STATUS MOBIL</th>
+                                <th>PAKAI PENGEMUDI</th>
                                 <th>CREATED MOBIL</th>
                                 <th class="text-center">Action</th>
                                     </tr>
@@ -74,14 +75,15 @@
                                             <!-- <td><img src="<?php echo base_url('upload/m/'.$val->PHOTO) ?>"></td> -->
                                             <td><?php if ($val->STATUS_SEWA==1) echo "Disewa"; else echo "Tidak Disewa"; ?></td>
                                             <td><?php if ($val->STATUS_MOBIL==1) echo "Tersedia"; else echo "Tidak Tersedia";  ?></td>
+                                            <td><?php echo strtoupper($val->PENGEMUDI) ?></td>
                                             <td><?php echo $val->CREATED_MOBIL ?></td>
                                             <td class="text-center"><a href="<?php echo base_url('mobil/update').'/'.$val->ID_MOBIL ?>">Edit</a>&nbsp;||&nbsp;<a href="<?php echo base_url('mobil/read').'/'.$val->ID_MOBIL ?>">Detail</a>&nbsp;||&nbsp;<a href="<?php echo base_url('mobil/delete').'/'.$val->ID_MOBIL ?>">Delete</a></td>
-                                        </tr>    
+                                        </tr>
                                     <?php endforeach ?>
-                                    
+
                                 </tbody>
                             </table>
-                        </div>                        
+                        </div>
                     </div>
                 </div><!--/.col (right) -->
             </div>

@@ -127,7 +127,7 @@ class Transaksi_model extends CI_Model
     function cancel($data,$id){
         $transaksi=$this->db->select("KODE_TRANSAKSI,TOTAL")->from($this->table_detail)->where("KODE_TRANSAKSI",$id)->get()->row();
         $this->db->query("Update tb_mobil set STATUS_SEWA=0 where ID_MOBIL='".$transaksi->ID_MOBIL."'",FALSE);
-        $this->db->query("Update tb_transaksi set STATUS_TRANSAKSI=2 where KODE_TRANSAKSI='".$transaksi->KODE_TRANSAKSI."'",FALSE);
+        $this->db->query("Update tb_transaksi set STATUS_TRANSAKSI=2,STATUS_PEMBAYARAN=3 where KODE_TRANSAKSI='".$transaksi->KODE_TRANSAKSI."'",FALSE);
         $this->db->where("KODE_TRANSAKSI",$id);
         $this->db->update($this->table_detail,$data);
         return $transaksi->KODE_TRANSAKSI;
@@ -138,9 +138,9 @@ class Transaksi_model extends CI_Model
         date_default_timezone_set('Asia/Jakarta');
         $date = date('Y-m-d H:i:s');
         $this->db->query("Update tb_mobil set STATUS_SEWA=1 where ID_MOBIL='".$transaksi->ID_MOBIL."'",FALSE);
-        $this->db->query("Update tb_transaksi set STATUS_TRANSAKSI=1, STATUS_PEMBAYARAN=1, TGL_PEMBAYARAN='".$date."' where KODE_TRANSAKSI='".$transaksi->KODE_TRANSAKSI."'",FALSE);
+        $this->db->query("Update tb_transaksi set STATUS_TRANSAKSI=1, STATUS_PEMBAYARAN=2, TGL_PEMBAYARAN='".$date."' where KODE_TRANSAKSI='".$transaksi->KODE_TRANSAKSI."'",FALSE);
         $this->db->where("KODE_TRANSAKSI",$id);
-        $this->db->update($this->table_detail,$data);
+        $this->db->update($this->table_detail,["STATUS"=>$data["STATUS"]]);
         return $transaksi->KODE_TRANSAKSI;
     }
 
@@ -153,27 +153,38 @@ class Transaksi_model extends CI_Model
 
     function selesai($data,$id){
         $transaksi=$this->db->select("KODE_TRANSAKSI,TOTAL,ID_MOBIL,TGL_AKHIR_PENYEWAAN")->from($this->table_detail)->where("KODE_TRANSAKSI",$id)->get()->row();
+        $this->main->setTable("tb_mobil");
+        $s = $this->main->get(["ID_MOBIL"=>$transaksi->ID_MOBIL])->row();
+        $sop = 0;
+        $denda = 0;
+        $this->main->setTable("tb_settings");
+        if ($s->PENGEMUDI == "pakai") {
+          $sop = $this->main->get(["meta_key"=>"harga_driver"])->row()->meta_value;
+        }
+        $denda = $this->main->get(["meta_key"=>"denda"])->row()->meta_value;
         //hitung denda
         $to_time = strtotime($data['TGL_PENGEMBALIAN']);
         $from_time = strtotime($transaksi->TGL_AKHIR_PENYEWAAN);
         // $data["DENDA"] = round(abs($to_time - $from_time) / 60,2)*$transaksi->TOTAL*50/100;
-        if($to_time>$from_time) 
-           $data["DENDA"] = round(abs($to_time - $from_time) / (60*60),2)*($transaksi->TOTAL*50/100);
-        else
-            $data["DENDA"] = 0;
-        $data["TOTAL"] = $transaksi->TOTAL+$data["DENDA"];
+        if($to_time>$from_time){
+          $s = lama(date("Y-m-d H:i:s"),$transaksi->TGL_SEWA,$transaksi->TGL_AKHIR_PENYEWAAN);
+          $data["DENDA"] = (abs($s["sisa"])*((($denda/100)*$transaksi->TOTAL)+$transaksi->TOTAL));
+        }else{
+          $data["DENDA"] = 0;
+        }
+        $data["TOTAL"] = $transaksi->TOTAL+$data["DENDA"]+$sop;
 
         $this->db->query("Update tb_mobil set STATUS_SEWA=0 where ID_MOBIL='".$transaksi->ID_MOBIL."'",FALSE);
         $this->db->query("Update tb_transaksi set STATUS_TRANSAKSI=3, TOTAL_PEMBAYARAN= ". $data["TOTAL"]." where KODE_TRANSAKSI='".$transaksi->KODE_TRANSAKSI."'",FALSE);
-        
+
         $this->db->where("KODE_TRANSAKSI",$id);
         $this->db->update($this->table_detail,$data);
-        return $transaksi->KODE_TRANSAKSI;   
+        return $transaksi->KODE_TRANSAKSI;
     }
 
     // function transaksi_selesai($data,$id){
     //     $this->db->where("KODE_TRANSAKSI",$id);
     //     $this->db->update($this->table,$data);
-    //     return $transaksi->KODE_TRANSAKSI;   
+    //     return $transaksi->KODE_TRANSAKSI;
     // }
 }

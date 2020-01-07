@@ -327,14 +327,16 @@ class Transaksi extends CI_Controller
 
     public function cancel($id){
         $data["STATUS"]=2;
+        $data["STATUS_PEMBAYARAN"]=3;
         $kode=$this->Transaksi_model->cancel($data,$id);
         redirect(site_url('transaksi'));
     }
 
     public function confirm($id){
-        $data["STATUS"]=1;
-        $kode=$this->Transaksi_model->confirm($data,$id);
-        redirect(site_url('transaksi'));
+      $data["STATUS"]=1;
+      $data["STATUS_PEMBAYARAN"]=2;
+      $kode=$this->Transaksi_model->confirm($data,$id);
+      redirect(site_url('transaksi'));
     }
 
     public function selesai($id){

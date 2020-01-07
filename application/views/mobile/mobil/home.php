@@ -7,7 +7,8 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <div class="row">
-                  <?php foreach ($mobil as $key => $value): ?>
+                  <?php if ($user->VALID == 1): ?>
+                    <?php foreach ($mobil as $key => $value): ?>
                     <div class="col-12 mb-2">
                       <a href="<?= base_url("mobile/view_detail/".$value->ID_MOBIL) ?>">
                         <?php
@@ -15,7 +16,7 @@
                         ?>
                         <div class="position-relative p-3 bg-gray" style="height: 180px;background-image:url(<?= base_url("upload/mobil/".$row->IMAGE) ?>)">
                         <div class="ribbon-wrapper">
-                          <?php if ($value->STATUS_SEWA == 1): ?>
+                          <?php if ($value->STATUS_SEWA == 1 && $value->STATUS_MOBIL == 1): ?>
                           <div class="ribbon bg-danger">
                             DISEWA
                           </div>
@@ -24,6 +25,12 @@
                           <div class="ribbon bg-success">
                             TERSEDIA
                           </div>
+                          <?php else: ?>
+                            <?php if ($value->STATUS_MOBIL == 0): ?>
+                              <div class="ribbon bg-dark">
+                                KOSONG
+                              </div>
+                            <?php endif; ?>
                           <?php endif; ?>
                         </div>
                         <?= $value->NAMA_MOBIL ?> <br>
@@ -31,6 +38,13 @@
                       </a>
                     </div>
                   <?php endforeach; ?>
+                <?php else: ?>
+                  <div class="col-12">
+                    <div class="alert alert-danger">
+                      Silahkan Verifikasi Identitas Anda Di Menu Verifikasi
+                    </div>
+                  </div>
+                <?php endif; ?>
 
                 </div>
               </div>

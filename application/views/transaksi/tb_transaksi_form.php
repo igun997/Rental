@@ -16,7 +16,7 @@
                             <h3 class="box-title">Pesanan Mobil</h3>
                         </div>
                     <!-- </div> -->
-                    <div class="box-body">         
+                    <div class="box-body">
                         <form action="<?php echo $action; ?>" method="post">
                          <div class="form-group">
                                 <label for="NAMA_USER">NAMA USER</label>
@@ -30,13 +30,13 @@
                                 <label for="ID_MOBIL">MOBIL</label>
                                 <select name="ID_MOBIL" id="ID_MOBIL" class="form-control" required>
                                     <option value="">Pilih Mobil</option>
-                                    <?php 
-                                    foreach($mobil as $m){ 
+                                    <?php
+                                    foreach($mobil as $m){
                                     ?>
-                                      <option value="<?php echo $m->ID_MOBIL;?>" harga="<?php echo $m->HARGA_MOBIL;?>"><?php echo $m->NAMA_MOBIL."(".$m->TAHUN_MOBIL.") Rp.".$m->HARGA_MOBIL;?></option>
+                                      <option value="<?php echo $m->ID_MOBIL;?>" supir="<?= $m->PENGEMUDI ?>" harga="<?php echo $m->HARGA_MOBIL;?>"><?php echo $m->NAMA_MOBIL."(".$m->TAHUN_MOBIL.") Rp.".number_format($m->HARGA_MOBIL)." (PAKAI SUPIR = ".($m->PENGEMUDI).")";?></option>
                                     <?php } ?>
                                 </select>
-                            </div>  
+                            </div>
                             <!--<div class="form-group">
                                 <label for="HARGA_MOBIL">HARGA MOBIL</label>
                                 <input type="number" class="form-control" name="HARGA_MOBIL" id="HARGA_MOBIL" placeholder="HARGA MOBIL" required/>
@@ -64,18 +64,18 @@
                                 <select class="form-control" name="STATUS_PEMBAYARAN" id="SSTATUS_PEMBAYARAN">
                                     <option value="0" <?php if ($STATUS_PEMBAYARAN==0) echo "selected" ?> >Belum Lunas</option>
                                     <option value="1" <?php if ($STATUS_PEMBAYARAN==1) echo "selected" ?> >Lunas</option>
-                                </select> 
+                                </select>
                             </div>
                          <!-- <div class="form-group">
                                 <label for="int">STATUS TRANSAKSI <?php echo form_error('STATUS_TRANSAKSI') ?></label>
                                 <input type="hidden" class="form-control" name="STATUS_TRANSAKSI" id="STATUS_TRANSAKSI" placeholder="STATUS TRANSAKSI" value="<?php echo $STATUS_TRANSAKSI; ?>" />
                             </div> -->
                          <!-- <input type="hidden" name="KODE_TRANSAKSI" value="<?php echo $KODE_TRANSAKSI; ?>" />  -->
-                         <button type="submit" class="btn btn-primary"><?php echo $button ?></button> 
+                         <button type="submit" class="btn btn-primary"><?php echo $button ?></button>
                          <a href="<?php echo site_url('transaksi') ?>" class="btn btn-default">Cancel</a>
                         </form>
                         </div>
-                        </div>         
+                        </div>
                     </div>
                 </div>
             </section><!-- /.content -->
@@ -89,15 +89,25 @@ function totalBayar(){
     var select = document.getElementById("ID_MOBIL");
     var selected = select.options[select.selectedIndex];
     var harga =  parseInt(selected.getAttribute('harga'));
+    var supir =  (selected.getAttribute('supir'));
     var lama= parseInt(document.getElementById("LAMA_PENYEWAAN").value);
-
+    console.log(supir);
 
     console.log(harga);
     console.log(lama);
 
     var total = document.getElementById("TOTAL_PEMBAYARAN");
-    total.placeholder = harga*lama+"";
-    total.value=harga*lama;
+    var harga_supir = <?= $this->db->get_where("tb_settings",["meta_key"=>"harga_driver"])->row()->meta_value ?>;
+    if (supir == "pakai") {
+      console.log(harga_supir);
+      total.placeholder = harga*lama+"";
+      total.value=harga*lama+(harga_supir);
+    }else {
+      console.log(harga_supir);
+      total.placeholder = harga*lama+"";
+      total.value=harga*lama;
+
+    }
 }
 
 </script>

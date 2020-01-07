@@ -17,6 +17,10 @@
                     <input type="number" min=1 max=100 class="form-control" name="denda" value="<?= $denda ?>">
                   </div>
                   <div class="form-group">
+                    <label>Harga Pengemudi</label>
+                    <input type="number" min=1 class="form-control" name="harga_driver" value="<?= $pengemudi ?>">
+                  </div>
+                  <div class="form-group">
                     <button type="submit" class="btn btn-success" >Simpan</button>
                   </div>
                 </form>

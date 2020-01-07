@@ -28,6 +28,12 @@ input[type="file"] {
                           <th>Total Bayar</th>
                           <td>Rp.<?= number_format($transaksi->TOTAL_PEMBAYARAN) ?></td>
                         </tr>
+                        <?php if ($sisa < 0): ?>
+                          <tr>
+                            <th>Denda</th>
+                            <td>Rp.<?= number_format($denda) ?></td>
+                          </tr>
+                        <?php endif; ?>
                         <tr>
                           <th>Status Bayar</th>
                           <td>
@@ -35,20 +41,44 @@ input[type="file"] {
                                 Belum Lunas
                               <?php endif; ?>
                               <?php if ($transaksi->STATUS_PEMBAYARAN == 1): ?>
-                                Lunas
+                                Menunggu Konfirmasi
                               <?php endif; ?>
                               <?php if ($transaksi->STATUS_PEMBAYARAN == 2): ?>
+                                Lunas
+                              <?php endif; ?>
+                              <?php if ($transaksi->STATUS_PEMBAYARAN == 3): ?>
                                 Ditolak
                               <?php endif; ?>
                           </td>
-                        </tr>
+                          <tr>
+                            <th>Status Order</th>
+                            <td>
+                                <?php if ($transaksi->STATUS_TRANSAKSI == 0): ?>
+                                  Menunggu
+                                <?php endif; ?>
+                                <?php if ($transaksi->STATUS_TRANSAKSI == 1): ?>
+                                  BERJALAN
+                                <?php endif; ?>
+                                <?php if ($transaksi->STATUS_TRANSAKSI == 3): ?>
+                                  SELESAI
+                                <?php endif; ?>
+                            </td>
+                          </tr>
+                          <?php if ($transaksi->STATUS_TRANSAKSI != 3): ?>
+                            <tr>
+                              <th>WAKTU SEWA</th>
+                              <td>
+                                <?= $waktu_sewa ?>
+                              </td>
+                            </tr>
+                          <?php endif; ?>
                       </table>
                   </div>
                   <div class="col-12">
                     <div class="row">
                       <?php if ($transaksi->STATUS_PEMBAYARAN == 0): ?>
                         <div class="col-12">
-                          <form class="" action="" method="post">
+                          <form class="" action="" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                               <label for="file-upload" class="custom-file-upload btn-block">
                                 <center>

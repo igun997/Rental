@@ -18,7 +18,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Fasilitas Mobil</h3>
                         </div>
-                        
+
                         <div class="box-body">
 
                             <table class="table">
@@ -36,22 +36,21 @@
                             <table class='table table-bordered table-striped' id='mytable'>
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>NAMA MOBIL</th>
-                                        <th>PLAT</th>
-                                        <th>TANGGAL SEWA</th>
-                                        <th>TANGGAL AKHIR SEWA</th>
-                                        <th>TANGGAL PENGEMBALIAN</th>
-                                        <th>HARGA PERHARI</th>
-                                        <th>TOTAL BAYAR</th>
-                                        <th>STATUS MOBIL</th>
-                                        <th>STATUS</th>
+                                      <th>No</th>
+                                      <th>NAMA MOBIL</th>
+                                      <th>PLAT</th>
+                                      <th>TANGGAL SEWA</th>
+                                      <th>TANGGAL AKHIR SEWA</th>
+                                      <th>HARGA PERHARI</th>
+                                      <th>SEWA PENGEMUDI</th>
+                                      <th>DENDA</th>
+                                      <th>TOTAL BAYAR</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                <?php 
+                                <?php
                                     $confirm="disabled";
                                     if ($STATUS_PEMBAYARAN) {
                                         $confirm="";
@@ -60,26 +59,39 @@
                                     foreach ($DETAIL_TRANSAKSI as $transaksi)
                                     {
                                 ?>
-                                        
+
                                         <tr>
-                                            <td><?php echo ++$start ?></td>
-                                            <td><?php echo $transaksi->NAMA_MOBIL ?></td>
-                                            <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
-                                            <td><?php echo $transaksi->TGL_SEWA ?></td>
-                                            <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
-                                            <td><?php echo $transaksi->TGL_PENGEMBALIAN ?></td>
-                                            <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
-                                            <td>Rp. <?php echo number_format($transaksi->TOTAL) ?></td>
-                                            <td><?php if ($transaksi->STATUS_MOBIL==0){echo "BELUM DIPROSES";}else if($transaksi->STATUS_MOBIL==1){echo "DIGUNAKAN"; }else{echo "KEMBALI";}?></td>
-                                            <td><?php if ($transaksi->STATUS==0){echo "BELUM DIPROSES";}else if($transaksi->STATUS==1){echo "DIPROSES"; }else if($transaksi->STATUS==3){echo "SELESAI"; }else {echo "CANCEL";}?></td>
+                                          <td><?php echo ++$start ?></td>
+                                          <td><?php echo $transaksi->NAMA_MOBIL ?></td>
+                                          <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
+                                          <td><?php echo $transaksi->TGL_SEWA ?></td>
+                                          <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
+                                          <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
+                                          <?php
+                                            $this->main->setTable("tb_settings");
+                                            $lama = lama(date("Y-m-d H:i:s"),$transaksi->TGL_SEWA,$transaksi->TGL_AKHIR_PENYEWAAN);
+                                            $dendaReal = 0;
+                                            $denda = $this->main->get(["meta_key"=>"denda"])->row()->meta_value;
+                                            $driver = 0;
+                                            if ($transaksi->PENGEMUDI == "pakai") {
+                                              $driver = $this->main->get(["meta_key"=>"harga_driver"])->row()->meta_value;
+                                            }
+                                            if ($lama["sisa"] < 0) {
+                                              $total = ($transaksi->TOTAL+$driver);
+                                              $dendaReal = (abs($lama["sisa"])*($total*($denda/100)))+$total;
+                                            }
+                                           ?>
+                                           <td>Rp. <?= number_format($driver) ?></td>
+                                           <td>Rp. <?= number_format($dendaReal) ?></td>
+                                          <td>Rp. <?php echo number_format($transaksi->TOTAL+$driver) ?></td>
                                             <td>
                                                 <?php if ($transaksi->STATUS==0): ?>
                                                     <a href="<?php echo site_url('transaksi/confirm/'.$transaksi->ID_DETAIL_TRANSAKSI) ?>"><button class="btn btn-primary btn-sm" onclick="javasciprt: return confirm('Are You Sure ?')" <?php echo $confirm ?>>Confirm</button></a>
-                                                    <a href="<?php echo site_url('transaksi/cancel/'.$transaksi->ID_DETAIL_TRANSAKSI) ?>" ><button class="btn btn-danger btn-sm" onclick="javasciprt: return confirm('Are You Sure ?')" <?php echo $confirm ?>>Cancel</button></a>    
+                                                    <a href="<?php echo site_url('transaksi/cancel/'.$transaksi->ID_DETAIL_TRANSAKSI) ?>" ><button class="btn btn-danger btn-sm" onclick="javasciprt: return confirm('Are You Sure ?')" <?php echo $confirm ?>>Cancel</button></a>
                                                 <?php endif ?>
                                                 <?php if ($transaksi->STATUS==1): ?>
                                                     <a href="<?php echo site_url('transaksi/selesai/'.$transaksi->ID_DETAIL_TRANSAKSI) ?>"><button class="btn btn-primary btn-sm" onclick="javasciprt: return confirm('Are You Sure ?')" <?php echo $confirm ?>>Selesai</button></a>
-                                                <?php endif ?>                                                
+                                                <?php endif ?>
                                             </td>
                                         </tr>
                                         <?php
@@ -87,11 +99,11 @@
                                     ?>
                                     </tbody>
                                 </table>
-                                                     
+
                             <tr><td></td><td><a href="<?php echo site_url('transaksi') ?>"><button class="btn btn-success btn-sm" <?php echo $confirm ?>>Confirm All</button></a></td></tr>
                             <tr><td></td><td><a href="<?php echo site_url('transaksi') ?>" class="btn btn-default">Cancel</a></td></tr>
- 
-                        </div>                        
+
+                        </div>
                     </div>
                 </div><!--/.col (right) -->
             </div>
@@ -110,5 +122,3 @@
                 });
             });
         </script>
-
-

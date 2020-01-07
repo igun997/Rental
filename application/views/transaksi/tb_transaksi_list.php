@@ -22,10 +22,10 @@
                                 <div style="margin-top: 4px"  id="message">
                                     <?php echo $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
                                 </div>
-                            </div>   
+                            </div>
                             <div class="col-md-12 text-right">
                                     <?php echo anchor(site_url('Transaksi/create'), '+ Tambah Pesanan', 'class="btn btn-primary"'); ?>
-                            </div>               
+                            </div>
                         </div>
                         <br><br>
                         <table class='table table-bordered table-striped' id='mytable'>
@@ -52,26 +52,26 @@
                             		<td><?php echo $transaksi->TGL_ORDER ?></td>
                             		<td>Rp. <?php echo number_format($transaksi->TOTAL_PEMBAYARAN) ?></td>
                             		<td><?php echo $transaksi->TGL_PEMBAYARAN ?></td>
-                            		 <td><?php if($transaksi->STATUS_PEMBAYARAN==1){
+                            		 <td><?php if($transaksi->STATUS_PEMBAYARAN==2){
                                             echo "Lunas";
                                         }else{
                                             echo "Belum Lunas";
                                         }
                                     ?></td>
                             		<td style="text-align:center" width="200px">
-                            			<?php 
-                            			echo anchor(site_url('transaksi/detail_pesanan/'.$transaksi->KODE_TRANSAKSI),'Detail'); 
-                            			// echo ' | '; 
-                            			// echo anchor(site_url('transaksi/update/'.$transaksi->KODE_TRANSAKSI),'Confirm'); 
-                            			// echo ' | '; 
-                            			// echo anchor(site_url('transaksi/delete/'.$transaksi->KODE_TRANSAKSI),'Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+                            			<?php
+                            			echo anchor(site_url('transaksi/detail_pesanan/'.$transaksi->KODE_TRANSAKSI),'Detail');
+                            			// echo ' | ';
+                            			// echo anchor(site_url('transaksi/update/'.$transaksi->KODE_TRANSAKSI),'Confirm');
+                            			// echo ' | ';
+                            			// echo anchor(site_url('transaksi/delete/'.$transaksi->KODE_TRANSAKSI),'Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
                             			?>
                             		</td>
                             	</tr>
                             <?php } ?>
                         </tbody>
                         </table>
-                    </div>                        
+                    </div>
                 </div>
             </div><!--/.col (right) -->
         </div>
@@ -88,5 +88,3 @@
         });
     });
 </script>
-
-

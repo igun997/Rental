@@ -50,13 +50,13 @@
                         <p><li class="fa fa-car"></li> <?= $mobil->MERK_MOBIL ?> (<?= $mobil->TAHUN_MOBIL ?>)</p>
                         <p><li class="fa fa-map"></li> <?= $mobil->PLAT_NO_MOBIL ?></p>
                         <p><li class="fas fa-chair"></li> Kapasitas <?= $mobil->KAPASITAS_MOBIL ?></p>
+                        <p><li class="fas fa-user"></li>  Pengemudi ? <span class='badge badge-primary'><?= $mobil->PENGEMUDI ?></span> </p>
                       </div>
                       <div class="col-6">
                         <p><li class="fas fa-money-check"></li> Rp. <?= number_format($mobil->HARGA_MOBIL) ?> </p>
                         <p><li class="fas fa-palette"></li> <?= $mobil->WARNA_MOBIL ?> </p>
                         <?php if ($mobil->STATUS_SEWA == 1): ?>
                           <p><li class="fas fa-ban"></li> <span class='badge badge-danger'>DISEWA</span> </p>
-
                         <?php else: ?>
                           <p><li class="fas fa-check"></li> <span class='badge badge-success'>TERSEDIA</span> </p>
                         <?php endif; ?>

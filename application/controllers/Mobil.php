@@ -11,7 +11,7 @@ class Mobil extends CI_Controller
         $this->load->model('M_mobil_admin');
         $this->load->model('M_fasilitas_admin');
         $this->load->model('M_fasilitas_mobil_admin');
-        $this->load->library('form_validation');        
+        $this->load->library('form_validation');
         $this->load->library('upload');
     	$this->load->library('datatables');
     }
@@ -22,17 +22,17 @@ class Mobil extends CI_Controller
         $this->load->view('template/header');
         $this->load->view('mobil/tb_mobil_list',$data);
         $this->load->view('template/footer');
-    } 
-    
+    }
+
     public function json() {
         header('Content-Type: application/json');
         echo $this->M_mobil_admin->json();
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->M_mobil_admin->get_by_id($id);
-        
+
         if ($row) {
             $data = array(
         		'ID_MOBIL' => $row->ID_MOBIL,
@@ -60,7 +60,7 @@ class Mobil extends CI_Controller
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
@@ -77,21 +77,22 @@ class Mobil extends CI_Controller
     	    'PLAT_NO_MOBIL' => set_value('PLAT_NO_MOBIL'),
 	        'STATUS_SEWA' => set_value('STATUS_SEWA'),
 	        'STATUS_MOBIL' => set_value('STATUS_MOBIL'),
-	        'CREATED_MOBIL' => set_value('CREATED_MOBIL'),
+          'CREATED_MOBIL' => set_value('CREATED_MOBIL'),
+	        'PENGEMUDI' => set_value('PENGEMUDI'),
     	);
         $data['fasilitas']=$this->M_fasilitas_admin->get_all();
-        
+
         foreach ($data['fasilitas'] as $var) {
             $data['fasilitas_mobil'][$var->ID_FASILITAS]="";
         }
-            
+
         // $data['fasilitas_mobil']=$this->M_fasilitas_mobil_admin->get_by_id(0);
         $this->load->view('template/header');
         $this->load->view('mobil/tb_mobil_form', $data);
-        $this->load->view('template/footer');        
+        $this->load->view('template/footer');
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -110,7 +111,8 @@ class Mobil extends CI_Controller
         		'BENSIN_MOBIL' => $this->input->post('BENSIN_MOBIL',TRUE),
         		'PLAT_NO_MOBIL' => $this->input->post('PLAT_NO_MOBIL',TRUE),
         		'STATUS_SEWA' => $this->input->post('STATUS_SEWA',TRUE),
-        		'STATUS_MOBIL' => $this->input->post('STATUS_MOBIL',TRUE),
+            'STATUS_MOBIL' => $this->input->post('STATUS_MOBIL',TRUE),
+        		'PENGEMUDI' => $this->input->post('PENGEMUDI',TRUE),
         		'CREATED_MOBIL' => date('Y-m-d H:i:s'),
     	    );
             $data["fasilitas"]=array();
@@ -124,7 +126,7 @@ class Mobil extends CI_Controller
                 $nama_photo=date("YmdHis").".jpg";
                 $config=$this->config_image($nama_photo,"./upload/mobil");
                 $this->upload->initialize($config);
-                
+
                 if($this->upload->do_upload('PHOTO')){
                     $data["photo"]=array('IMAGE'=> $nama_photo);
                 }
@@ -135,15 +137,15 @@ class Mobil extends CI_Controller
             redirect(site_url('mobil'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->M_mobil_admin->get_by_id($id);
 
         if ($row) {
             $data = array(
-                'button' => 'Update',
-                'action' => site_url('mobil/update_action'),
+            'button' => 'Update',
+            'action' => site_url('mobil/update_action'),
         		'ID_MOBIL' => set_value('ID_MOBIL', $row->ID_MOBIL),
         		'NAMA_MOBIL' => set_value('NAMA_MOBIL', $row->NAMA_MOBIL),
         		'MERK_MOBIL' => set_value('MERK_MOBIL', $row->MERK_MOBIL),
@@ -155,7 +157,8 @@ class Mobil extends CI_Controller
         		'BENSIN_MOBIL' => set_value('BENSIN_MOBIL', $row->BENSIN_MOBIL),
         		'PLAT_NO_MOBIL' => set_value('PLAT_NO_MOBIL', $row->PLAT_NO_MOBIL),
         		'STATUS_SEWA' => set_value('STATUS_SEWA', $row->STATUS_SEWA),
-        		'STATUS_MOBIL' => set_value('STATUS_MOBIL', $row->STATUS_MOBIL),
+            'STATUS_MOBIL' => set_value('STATUS_MOBIL', $row->STATUS_MOBIL),
+        		'PENGEMUDI' => set_value('PENGEMUDI', $row->PENGEMUDI),
         		'CREATED_MOBIL' => set_value('CREATED_MOBIL', $row->CREATED_MOBIL),
 	        );
 
@@ -178,11 +181,12 @@ class Mobil extends CI_Controller
             redirect(site_url('mobil'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
-
+        // var_dump($this->input->post(NULL,true));
+        // exit();
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('ID_MOBIL', TRUE));
         } else {
@@ -197,7 +201,8 @@ class Mobil extends CI_Controller
         		'BENSIN_MOBIL' => $this->input->post('BENSIN_MOBIL',TRUE),
         		'PLAT_NO_MOBIL' => $this->input->post('PLAT_NO_MOBIL',TRUE),
         		'STATUS_SEWA' => $this->input->post('STATUS_SEWA',TRUE),
-        		'STATUS_MOBIL' => $this->input->post('STATUS_MOBIL',TRUE),
+            'STATUS_MOBIL' => $this->input->post('STATUS_MOBIL',TRUE),
+        		'PENGEMUDI' => $this->input->post('PENGEMUDI',TRUE),
     	    );
 
             $data["fasilitas"]=array();
@@ -213,7 +218,7 @@ class Mobil extends CI_Controller
             $nama_photo=date("YmdHis").".jpg";
             $config=$this->config_image($nama_photo,"./upload/mobil");
             $this->upload->initialize($config);
-                
+
             if($this->upload->do_upload('PHOTO')){
                 $data["photo"]=array('IMAGE'=> $nama_photo);
             }
@@ -224,8 +229,8 @@ class Mobil extends CI_Controller
             redirect(site_url('mobil'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->M_mobil_admin->get_by_id($id);
 
@@ -239,7 +244,7 @@ class Mobil extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
 	$this->form_validation->set_rules('NAMA_MOBIL', 'nama mobil', 'trim|required');
 	$this->form_validation->set_rules('MERK_MOBIL', 'merk mobil', 'trim|required');

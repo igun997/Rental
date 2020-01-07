@@ -3,10 +3,10 @@
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      Anything you want
+      Rental Mobil
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2020 <a href="#">Orange Rental</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
@@ -109,7 +109,7 @@
      user experience. Slimscroll is required when using the
      fixed layout. -->
 <!-- iCheck 1.0.1 -->
-<script src="<?php echo base_url('')?>assets/plugins/iCheck/icheck.min.js"></script>     
+<script src="<?php echo base_url('')?>assets/plugins/iCheck/icheck.min.js"></script>
 <!-- Mask Money      -->
 <script src="<?php echo base_url('')?>assets/plugins/maskmoney/jquery.maskMoney.min.js"></script>
 
@@ -142,7 +142,7 @@
           $(this).val(date);
         });
       }
-       
+
        var isValidDate = function(value, format) {
         format = format || false;
         // lets parse the date to the best of our knowledge
@@ -154,7 +154,7 @@
 
         return isNaN(timestamp) == false;
        }
-       
+
        var parseDate = function(value) {
         var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
         if (m)
@@ -162,12 +162,12 @@
 
         return value;
        }
-       
+
        bindDatePicker();
      });
-    
+
     $(".selected").select2();
-    
+
     $('#datepicker').datepicker({
       autoclose: true,
       dateFormat:'yyyy-mm-dd'
@@ -177,7 +177,7 @@
         "scrollX": true
     });
     $("#harga1").maskMoney({thousands:".",decimal:",",precision:0});
-    
+
         //iCheck for checkbox and radio inputs
     $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
       checkboxClass: 'icheckbox_minimal-blue',
@@ -193,7 +193,7 @@
       checkboxClass: 'icheckbox_flat-green',
       radioClass: 'iradio_flat-green'
     });
-    
+
 </script>
 
 <script>
@@ -226,7 +226,7 @@ $().ready(function(){
         url:'<?php echo base_url('')?>index.php/karyawan/getkota',
         data:'id='+provinsi,
             success: function(html){
-              $('#kota').html(html); 
+              $('#kota').html(html);
             }
       });
   });
@@ -238,7 +238,7 @@ $().ready(function(){
         url:'<?php echo base_url('')?>index.php/karyawan/getkecamatan',
         data:'id='+kota,
           success: function(html){
-            $('#kecamatan').html(html); 
+            $('#kecamatan').html(html);
           }
       });
   });
@@ -250,7 +250,7 @@ $().ready(function(){
           url:'<?php echo base_url('')?>index.php/karyawan/getdesa',
           data:'id='+kecamatan,
                   success: function(html){
-              $('#desa').html(html); 
+              $('#desa').html(html);
                 }
           });
       });
@@ -285,7 +285,7 @@ $().ready(function(){
        }
     });
   });
-  
+
   $('#kd_motor_search').keyup(function(){
     var kd_motor=$('#kd_motor_search').val();
     $.ajax({
@@ -322,7 +322,7 @@ $().ready(function(){
   });
 
 
-    
+
 });
 </script>
 </body>

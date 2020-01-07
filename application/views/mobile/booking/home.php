@@ -15,14 +15,24 @@
                         ?>
                         <div class="position-relative p-3 bg-gray" style="height: 180px;background-image:url(<?= base_url("upload/mobil/".$row->IMAGE) ?>)">
                         <div class="ribbon-wrapper">
-                          <?php if ($value->STATUS_PEMBAYARAN == 0): ?>
+                          <?php if ($value->STATUS_PEMBAYARAN == 0 || $value->STATUS_PEMBAYARAN == 1): ?>
                           <div class="ribbon bg-danger">
                             PENDING
+                          </div>
+                          <?php endif; ?>
+                          <?php if ($value->STATUS_PEMBAYARAN == 3): ?>
+                          <div class="ribbon bg-danger">
+                            DITOLAK
                           </div>
                           <?php endif; ?>
                           <?php if ($value->STATUS_PEMBAYARAN == 1 && $value->STATUS_TRANSAKSI == 1): ?>
                           <div class="ribbon bg-success">
                             LUNAS
+                          </div>
+                          <?php endif; ?>
+                          <?php if ($value->STATUS_TRANSAKSI == 3): ?>
+                          <div class="ribbon bg-primary">
+                            SELESAI
                           </div>
                           <?php endif; ?>
                         </div>

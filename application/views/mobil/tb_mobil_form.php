@@ -21,7 +21,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Form Mobil</h3>
                         </div><!-- /.box-header -->
-                        
+
                         <!-- form start -->
                         <div class="box-body">
                             <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
@@ -54,10 +54,10 @@
                                 <input type="text" class="form-control" name="WARNA_MOBIL" id="WARNA_MOBIL" placeholder="WARNA MOBIL" value="<?php echo $WARNA_MOBIL; ?>" />
                             </div>
                             <div class="form-group">
-                                <label for="int">BENSIN MOBIL <?php echo form_error('BENSIN_MOBIL') ?></label>
+                                <label for="int">TRANSMISI MOBIL <?php echo form_error('BENSIN_MOBIL') ?></label>
                                 <select class="form-control" name="BENSIN_MOBIL" id="BENSIN_MOBIL">
                                     <option value="1" <?php if ($BENSIN_MOBIL==1) echo "selected" ?> >Autometic</option>
-                                    <option value="2" <?php if ($BENSIN_MOBIL==2) echo "selected" ?> >Manual</option> 
+                                    <option value="2" <?php if ($BENSIN_MOBIL==2) echo "selected" ?> >Manual</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -76,30 +76,35 @@
                                 <select class="form-control" name="STATUS_MOBIL" id="STATUS_MOBIL">
                                     <option value="0" <?php if ($STATUS_MOBIL==0) echo "selected" ?> >Tidak Tersedia</option>
                                     <option value="1" <?php if ($STATUS_MOBIL==1) echo "selected" ?> >Tersedia</option>
-                                </select> 
+                                </select>
                             </div>
-                            
+                            <div class="form-group">
+                                <label for="int">PAKAI PENGEMUDI <?php echo form_error('PENGEMUDI') ?></label>
+                                <select class="form-control" name="PENGEMUDI" id="PENGEMUDI">
+                                    <option value="tidak" <?php if ($PENGEMUDI=="tidak") echo "selected" ?> >TIDAK</option>
+                                    <option value="pakai" <?php if ($PENGEMUDI=="pakai") echo "selected" ?> >YA</option>
+                                </select>
+                            </div>
+
                             <div class="form-group">
                                 <label for="int">IMAGE MOBIL</label>
                                 <input class="form-control" type="file" name="PHOTO" id="PHOTO">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="int">Fasilitas</label><br>
                                 <?php foreach ($fasilitas as $row): ?>
-                                    <input type="checkbox" name="FASILITAS[]" value="<?php echo $row->ID_FASILITAS ?>" <?php echo $fasilitas_mobil[$row->ID_FASILITAS]; ?>> <?php echo $row->FASILITAS ?>&nbsp;                                
+                                    <input type="checkbox" name="FASILITAS[]" value="<?php echo $row->ID_FASILITAS ?>" <?php echo $fasilitas_mobil[$row->ID_FASILITAS]; ?>> <?php echo $row->FASILITAS ?>&nbsp;
                                 <?php endforeach ?>
                             </div>
 
-                            <input type="hidden" name="ID_MOBIL" value="<?php echo $ID_MOBIL; ?>" /> 
-                            <button type="submit" class="btn btn-primary"><?php echo $button ?></button> 
+                            <input type="hidden" name="ID_MOBIL" value="<?php echo $ID_MOBIL; ?>" />
+                            <button type="submit" class="btn btn-primary"><?php echo $button ?></button>
                             <a href="<?php echo site_url('mobil') ?>" class="btn btn-default">Cancel</a>
                         </form>
-                        </div>                        
+                        </div>
                     </div>
                 </div><!--/.col (right) -->
             </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
-
-

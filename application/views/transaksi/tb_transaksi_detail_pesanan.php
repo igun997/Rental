@@ -26,15 +26,15 @@
                         	    <tr><td>TGL ORDER</td><td><?php echo $TGL_ORDER; ?></td></tr>
                         	    <tr><td>TOTAL PEMBAYARAN</td><td>Rp. <?php echo number_format($TOTAL_PEMBAYARAN); ?></td></tr>
                         	    <tr><td>TGL PEMBAYARAN</td><td><?php echo $TGL_PEMBAYARAN; ?></td></tr>
-                        	    <!-- <tr><td>BUKTI PEMBAYARAN</td><td><img src="<?php echo base_url('upload/bukti_pembayaran/'.$BUKTI_PEMBAYARAN); ?>" width="200px"></td></tr> -->
+                        	    <tr><td>BUKTI PEMBAYARAN</td><td><img src="<?php echo base_url('upload/mobil/'.$BUKTI_PEMBAYARAN); ?>" width="200px"></td></tr>
                         	    <tr><td>STATUS PEMBAYARAN</td><td><?php
                               if ($STATUS_PEMBAYARAN == 0) {
                                 echo "MENUNGGU PEMBAYARAN";
                               }elseif ($STATUS_PEMBAYARAN == 1) {
                                 echo "PEMBAYARAN MENUNGGU VERIFIKASI";
-                              }elseif ($STATUS_PEMBAYARAN == 3) {
+                              }elseif ($STATUS_PEMBAYARAN == 2) {
                                 echo "PEMBAYARAN TERVERIFIKASI";
-                              }elseif ($STATUS_PEMBAYARAN == 4) {
+                              }elseif ($STATUS_PEMBAYARAN == 3) {
                                 echo "PEMBAYARAN DITOLAK";
                               }
                               ?></td></tr>
@@ -46,13 +46,15 @@
                             <table class='table table-bordered table-striped' id='mytable'>
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>NAMA MOBIL</th>
-                                        <th>PLAT</th>
-                                        <th>TANGGAL SEWA</th>
-                                        <th>TANGGAL AKHIR SEWA</th>
-                                        <th>HARGA PERHARI</th>
-                                        <th>TOTAL BAYAR</th>
+                                      <th>No</th>
+                                      <th>NAMA MOBIL</th>
+                                      <th>PLAT</th>
+                                      <th>TANGGAL SEWA</th>
+                                      <th>TANGGAL AKHIR SEWA</th>
+                                      <th>HARGA PERHARI</th>
+                                      <th>SEWA PENGEMUDI</th>
+                                      <th>DENDA</th>
+                                      <th>TOTAL BAYAR</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -69,13 +71,29 @@
                                 ?>
 
                                     <tr>
-                                        <td><?php echo ++$start ?></td>
-                                        <td><?php echo $transaksi->NAMA_MOBIL ?></td>
-                                        <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
-                                        <td><?php echo $transaksi->TGL_SEWA ?></td>
-                                        <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
-                                        <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
-                                        <td>Rp. <?php echo number_format($transaksi->TOTAL) ?></td>
+                                      <td><?php echo ++$start ?></td>
+                                      <td><?php echo $transaksi->NAMA_MOBIL ?></td>
+                                      <td><?php echo $transaksi->PLAT_NO_MOBIL ?></td>
+                                      <td><?php echo $transaksi->TGL_SEWA ?></td>
+                                      <td><?php echo $transaksi->TGL_AKHIR_PENYEWAAN ?></td>
+                                      <td>Rp. <?php echo number_format($transaksi->HARGA_MOBIL) ?></td>
+                                      <?php
+                                        $this->main->setTable("tb_settings");
+                                        $lama = lama(date("Y-m-d H:i:s"),$transaksi->TGL_SEWA,$transaksi->TGL_AKHIR_PENYEWAAN);
+                                        $dendaReal = 0;
+                                        $denda = $this->main->get(["meta_key"=>"denda"])->row()->meta_value;
+                                        $driver = 0;
+                                        if ($transaksi->PENGEMUDI == "pakai") {
+                                          $driver = $this->main->get(["meta_key"=>"harga_driver"])->row()->meta_value;
+                                        }
+                                        if ($lama["sisa"] < 0) {
+                                          $total = ($transaksi->TOTAL+$driver);
+                                          $dendaReal = (abs($lama["sisa"])*($total*($denda/100)))+$total;
+                                        }
+                                       ?>
+                                       <td>Rp. <?= number_format($driver) ?></td>
+                                       <td>Rp. <?= number_format($dendaReal) ?></td>
+                                      <td>Rp. <?php echo number_format($transaksi->TOTAL+$driver) ?></td>
                                         <td>
                                                 <a href="<?php echo site_url('transaksi/confirm/'.$transaksi->KODE_TRANSAKSI) ?>">
                                                     <button class="btn btn-primary btn-sm" onclick="javasciprt: return confirm('Are You Sure ?')"

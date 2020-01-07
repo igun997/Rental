@@ -68,7 +68,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 Pesanan Saya
               </p>
             </a>
-            <a href="#" class="nav-link">
+            <a href="<?= base_url("mobile/verifikasi") ?>" class="nav-link">
               <i class="nav-icon fas fa-check"></i>
               <p>
                 Verifikasi Identitas
